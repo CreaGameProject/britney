@@ -18,6 +18,7 @@ public class Jump : MonoBehaviour
     private bool goJump = false;    //ジャンプしたか否か
     private bool isGround = false;   //ブロックに接地しているか否か
 
+    private bool is_gameover = false;
 
     // Use this for initialization
     // Start is called before the first frame update
@@ -37,22 +38,25 @@ public class Jump : MonoBehaviour
         //isGround =
         //  Physics2D.Linecast((transform.position - transform.up * 1.0f), (transform.position - transform.up * 2f), blockLayer);
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (!is_gameover)
         {
-          
-            PushJumpButton();
-        }
-        else
-        {
-            goJump = false;
-        }
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+
+                PushJumpButton();
+            }
+            else
+            {
+                goJump = false;
+            }
 
             //ジャンプ処理
             if (goJump)
-        {
-            audioSource.PlayOneShot(sound1);
-            rbody.AddForce(Vector2.up * jumpPower);
-            goJump = false;
+            {
+                audioSource.PlayOneShot(sound1);
+                rbody.AddForce(Vector2.up * jumpPower);
+                goJump = false;
+            }
         }
     }
 
@@ -73,7 +77,7 @@ public class Jump : MonoBehaviour
     {
         if (collision.gameObject.tag == "shougaibutu")
         {
-            isGround = false;
+            is_gameover = true;
             audioSource.Stop();
             audioSource.PlayOneShot(sound2);
             StartCoroutine("Wait");
@@ -97,6 +101,7 @@ public class Jump : MonoBehaviour
         {
             yield return null;
         }
+        Time.timeScale = 1;
         SceneManager.LoadScene("ResultScene");
     }
 }

@@ -24,7 +24,7 @@ public class SceneControl : MonoBehaviour
             Scene nowScene = SceneManager.GetActiveScene();
             if (nowScene.name == "StartScene")
             {
-                SceneManager.LoadScene("GameScene");
+                StartCoroutine(Go_To_Next_Scene("GameScene"));
             }
             if (nowScene.name == "GameScene")
             {
@@ -32,12 +32,24 @@ public class SceneControl : MonoBehaviour
             }
             if (nowScene.name == "ResultScene")
             {
-                SceneManager.LoadScene("StartScene");
+                StartCoroutine(Go_To_Next_Scene("StartScene"));
             }
                 
         }
             
        
+    }
+
+    IEnumerator Go_To_Next_Scene(string scene_name)
+    {
+        AudioSource AS = Camera.main.GetComponent<AudioSource>();
+        float sound_length = AS.clip.length;
+        if (!AS.isPlaying)
+        {
+            AS.Play();
+            yield return new WaitForSeconds(sound_length);
+            SceneManager.LoadScene(scene_name);
+        }
     }
    
 }
